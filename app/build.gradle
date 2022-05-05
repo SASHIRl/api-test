@@ -10,6 +10,8 @@ repositories {
 dependencies {
     testImplementation 'junit:junit:4.+'
     testImplementation 'io.rest-assured:rest-assured:5.+'
+    //Foi necessário para rodar os testes pelo ./gradlew test no Git
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.2")
 }
 
 test {

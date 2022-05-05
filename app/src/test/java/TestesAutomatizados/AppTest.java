@@ -9,8 +9,7 @@ import org.apache.http.HttpStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -20,6 +19,9 @@ public class AppTest {
     public static void setup () {
         //Caso haja alguma falha o retorno será verboso com detalhes da situação.
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        //Caso haja diversos testes, não seria interessante ficar repetindo o endpoint completo
+        baseURI = "https://7eb984w4j4.execute-api.us-east-1.amazonaws.com";
+        basePath = "/dev";
     }
 
     @Test
@@ -28,7 +30,7 @@ public class AppTest {
             contentType(ContentType.JSON).
             body("{\"mensagem\": \"Mensagem de teste\", \"num_destinatario\": \"12345678901\"}").
         when().
-                post("https://7eb984w4j4.execute-api.us-east-1.amazonaws.com/dev/lambdastresstest").
+                post("/lambdastresstest").
         then().
                 statusCode(HttpStatus.SC_OK).
                 body("statusCode", is(200)).
