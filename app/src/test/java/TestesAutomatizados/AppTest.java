@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -33,6 +34,30 @@ public class AppTest {
                 post("/lambdastresstest").
         then().
                 statusCode(HttpStatus.SC_OK).
+                body("statusCode", is(200)).
+                body("body", is("\"Mensagem enviada com sucesso\""));
+    }
+
+    @Test
+    public void testaCampoNumeroVazio() {
+        given().
+                contentType(ContentType.JSON).
+                body("{\"mensagem\": \"Mensagem de teste\", \"num_destinatario\": \"\"}").
+        when().
+                post("/lambdastresstest").
+        then().
+                body("statusCode", is(400)).
+                body("body", is("\"Numero inválido\""));
+    }
+
+    @Test
+    public void testaCampoMensagemVazio() {
+        given().
+                contentType(ContentType.JSON).
+                body("{\"mensagem\": \"\", \"num_destinatario\": \"12345678901\"}").
+        when().
+                post("/lambdastresstest").
+        then().
                 body("statusCode", is(200)).
                 body("body", is("\"Mensagem enviada com sucesso\""));
     }
