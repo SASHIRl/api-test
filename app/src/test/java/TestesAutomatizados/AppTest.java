@@ -3,13 +3,35 @@
  */
 package TestesAutomatizados;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class AppTest {
-    @Test public void appHasAGreeting() {
-        assertThat(1, is(1));
+
+    @BeforeClass
+    public static void setup () {
+        //Caso haja alguma falha o retorno será verboso com detalhes da situação.
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    }
+
+    @Test
+    public void testeEnviaMensagem() {
+        given().
+            contentType(ContentType.JSON).
+            body("{\"mensagem\": \"Mensagem de teste\", \"num_destinatario\": \"12345678901\"}").
+        when().
+                post("https://7eb984w4j4.execute-api.us-east-1.amazonaws.com/dev/lambdastresstest").
+        then().
+                statusCode(HttpStatus.SC_OK).
+                body("statusCode", is(200)).
+                body("body", is("\"Mensagem enviada com sucesso\""));
     }
 }
