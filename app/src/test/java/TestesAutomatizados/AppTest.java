@@ -61,4 +61,16 @@ public class AppTest {
                 body("statusCode", is(200)).
                 body("body", is("\"Mensagem enviada com sucesso\""));
     }
+
+    @Test
+    public void testeQtdDigitosNumeroDestinatario() {
+        given().
+                contentType(ContentType.JSON).
+                body("{\"mensagem\": \"\", \"num_destinatario\": \"123456789011\"}").
+        when().
+                post("/lambdastresstest").
+        then().
+                body("statusCode", is(400)).
+                body("body", is("\"Numero inválido\""));
+    }
 }
